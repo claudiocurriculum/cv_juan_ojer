@@ -1,0 +1,282 @@
+/* ================== BASE ================== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #0f0f14;
+  color: #f1f1f5;
+  margin: 0;
+}
+
+/* Estructura general: barra izquierda, panel central y panel derecho */
+.app-shell {
+  display: grid;
+  grid-template-columns: 120px 7fr 0.2fr; /* AHORA la derecha es 3 veces más ancha */
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 20%, #1e1e28 0%, #0f0f14 60%);
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+  background: #1a1a22;
+  border-right: 1px solid #2f2f3a;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem .75rem;
+  position: relative; /* necesario para indicadores */
+}
+
+.sidebar-header {
+  margin-bottom: 1rem;
+  flex: 0 0 auto;
+}
+
+.sidebar-avatar {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg,#4a4cff,#8a4dff);
+  border-radius: .8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Contenedor que realmente se desliza en móvil */
+.sidebar-scroller {
+  position: relative;
+  width: 100%;
+}
+
+/* Menú vertical (desktop) / horizontal (mobile) */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  width: 100%;
+  align-items: center;
+}
+
+.menu-item {
+  background: #242433;
+  border: 1px solid #343446;
+  border-radius: .6rem;
+  color: #c7c8d9;
+  font-size: .7rem; /* .7rem */
+  width: 100%;
+  max-width: 90px;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  transition: 0.2s;
+  text-align: center;
+  flex: 0 0 auto; /* evita que los botones se achiquen y corten */
+}
+
+.menu-item i {
+  font-size: 1rem;
+  color: #8a4dff;
+}
+
+.menu-item.active, .menu-item:hover {
+  background: #4a4cff;
+  color: #fff;
+  border-color: #4a4cff;
+}
+
+/* --- Indicadores de scroll (base) --- */
+.scroll-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: .35rem .45rem;
+  border-radius: .6rem;
+  background: rgba(15,15,20,.55);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  opacity: 0;              /* por defecto oculto */
+  pointer-events: none;
+  transition: opacity .2s ease;
+  z-index: 2;
+}
+.scroll-indicator.left  { left: 4px; }
+.scroll-indicator.right { right: 4px; }
+.scroll-indicator i { font-size: .9rem; color: #fff; }
+
+/* Mostrar según clases que setea el JS en móvil */
+.sidebar.show-left  .scroll-indicator.left  { opacity: 1; }
+.sidebar.show-right .scroll-indicator.right { opacity: 1; }
+
+/* --- ÁREA PRINCIPAL --- */
+.main-area {
+  display: grid;
+  grid-template-columns: 1fr 3fr; /* derecha triple */
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.photo-panel {
+  display: flex;
+  flex-direction: column;       /* 👈 FOTO ARRIBA, DATOS ABAJO */
+  justify-content: flex-start;
+  align-items: center;
+  background: #1a1a22;
+  border-radius: 1rem;
+  border: 1px solid #2f2f3a;
+  padding: 1.2rem 1rem;
+}
+
+.profile-photo {
+  width: 250px;
+  height: 300px;
+  border-radius: 1rem;
+  border: 3px solid #E6BE8A; /* borde de imagen lila #8a4dff */
+  object-fit: cover;
+}
+
+.detail-panel {
+  background: #1a1a22;
+  border-radius: 1rem;
+  border: 1px solid #2f2f3a;
+  padding: 2rem;
+  overflow-y: auto;
+  height: 85vh; /* mismo alto que las demás columnas */
+  scrollbar-width: thin;
+  scrollbar-color: #E6BE8A #1a1a22; /* #8a4dff */
+}
+
+/* Secciones de detalle */
+.detail-section { display: none; }
+.detail-section.visible { display: block; }
+
+h2 { color: #ffffff; }  /*#8a4dff lila #ffffff blanco #38bdf8  azul petroleo*/
+h3 { color: #00B8F0; }
+
+.subrayado {
+  text-decoration: underline;
+  text-decoration-color: #ffffff;  /* o el color que quieras */
+  text-decoration-thickness: 2px;  /* grosor del subrayado */
+  text-underline-offset: 3px;      /* separación del texto */
+}
+
+
+.mini-img {
+  display: block;
+  margin: 25px auto 45px auto; /* centrada con espacio */
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s ease;
+}
+.mini-img:hover { transform: scale(1.10); }
+
+/* ================== MÓVIL ================== */
+@media (max-width: 768px) {
+  .app-shell {
+    grid-template-columns: 1fr; /* sidebar arriba */
+  }
+
+  .main-area {
+    grid-template-columns: 1fr; /* foto y detalle en columna */
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  /* --- Sidebar deslizable --- */
+  .sidebar {
+    flex-direction: row;
+    align-items: center;
+    padding: .5rem 0;
+    border-radius: 0;
+    overflow: hidden; /* el scroller maneja el overflow-x */
+    gap: .5rem;
+  }
+
+  .sidebar-header {
+    margin: 0 .5rem 0 .75rem; /* deja espacio a la izquierda */
+    flex: 0 0 auto;           /* ancho fijo para el avatar */
+  }
+
+  .sidebar-scroller {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;     /* OCUPA el resto del ancho */
+    min-width: 0;       /* CLAVE: permite que el contenedor reduzca su ancho y no corte el menú */
+    width: auto;
+  }
+
+  .sidebar-menu {
+    display: inline-flex;
+    flex-direction: row;
+    gap: .5rem;
+    padding: .5rem 1rem;
+    width: max-content; /* importante para habilitar el scroll horizontal */
+  }
+
+  .menu-item {
+    min-width: 80px;
+    min-height: 60px;
+    font-size: .65rem;
+    white-space: nowrap; /* evita quiebres de línea */
+    flex: 0 0 auto;      /* no se achican */
+  }
+
+  /* Fades laterales sutiles */
+  .sidebar::before,
+  .sidebar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 22px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .sidebar::before {
+    left: 0;
+    background: linear-gradient(90deg, rgba(15,15,20,1), rgba(15,15,20,0));
+  }
+  .sidebar::after {
+    right: 0;
+    background: linear-gradient(-90deg, rgba(15,15,20,1), rgba(15,15,20,0));
+  }
+
+  /* Imagen y contenidos */
+  .profile-photo {
+    width: 200px;
+    height: 240px;
+  }
+
+  .mini-img {
+    width: 85%;
+    max-width: 350px;
+    margin: 20px auto 35px;
+  }
+  .resaltado {
+  color: #ffffff;              /* Color del texto blanco*/
+  font-size: 1.2rem;           /* Tamaño del texto */
+  text-decoration: underline;  /* Subrayado */
+  text-decoration-color: #ffffff;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+  /* Color de links y efecto hover */
+a {
+  color: #38bdf8;
+  text-decoration: underline;
+  border-bottom: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+a:hover {
+  color: #0ea5e9;
+  border-bottom: 1px solid #0ea5e9;
+}  
+}
